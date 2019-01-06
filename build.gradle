@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'idea'
     id 'net.researchgate.release' version '2.3.5'
+    id "co.riiid.gradle" version "0.4.2"
 }
 
 repositories {
@@ -22,11 +22,43 @@ task(startmessage) << {
     println 'starting build'
 }
 
-task(printversion) << {
+//task(uploadArchives) << {
+//    println project.version
+//}
+
+task uploadArchives(type:Exec) {
     println project.version
+
+    workingDir '.'
+
+    commandLine "ghr", "--version"
+    //on linux
+    //commandLine "ghr -t 8078764ff641d2c68c5faeba9e03e19542880689 -u jeremycook123 -r gradereleasetest -n Skynet -b 'best release ever' ${project.version} ./build/libs/"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
 }
 
 beforeReleaseBuild.dependsOn startmessage
-afterReleaseBuild.dependsOn printversion
+afterReleaseBuild.dependsOn uploadArchives
 
-wrapper.gradleVersion = '2.10'
+//wrapper.gradleVersion = '2.10'
+wrapper.gradleVersion = '4.10.2'
+
+github {
+    owner = 'jeremycook123'
+    repo = 'gradereleasetest'
+    token = '8078764ff641d2c68c5faeba9e03e19542880689'
+    tagName = '5.4.0'
+    targetCommitish = 'master'
+    name = 'v5.4.0'
+    body = """# Project Name
+Write `release note` here.
+"""
+    assets = ['./build/libs/single-project-1.0.5']
+}
