@@ -31,9 +31,9 @@ task uploadArchives(type:Exec) {
 
     workingDir '.'
 
-    commandLine "ghr", "--version"
+    //commandLine "ghr", "--version"
     //on linux
-    //commandLine "ghr -t 8078764ff641d2c68c5faeba9e03e19542880689 -u jeremycook123 -r gradereleasetest -n Skynet -b 'best release ever' ${project.version} ./build/libs/"
+    commandLine 'ghr', '-t', "8078764ff641d2c68c5faeba9e03e19542880689", "-u", "jeremycook123", "-r", "gradereleasetest", "-n", "Skynet", "-b", "best release ever", project.version, "./build/libs/"
 
     //store the output instead of printing to the console:
     standardOutput = new ByteArrayOutputStream()
@@ -45,7 +45,7 @@ task uploadArchives(type:Exec) {
 }
 
 beforeReleaseBuild.dependsOn startmessage
-afterReleaseBuild.dependsOn uploadArchives
+//afterReleaseBuild.dependsOn uploadArchives
 
 //wrapper.gradleVersion = '2.10'
 wrapper.gradleVersion = '4.10.2'
