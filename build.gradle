@@ -15,10 +15,7 @@ dependencies {
 release {
     tagTemplate = '$name-$version'
     failOnCommitNeeded = false
-}
-
-artifacts {
-  archives jar
+    failOnUnversionedFiles = false
 }
 
 task(startmessage) << {
